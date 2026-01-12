@@ -51,6 +51,41 @@ def load_gs_data(file_path):
     return gs_data
 
 
+def save_combined_pt(human_gs_out, scene_gs_out, output_path):
+    """Save combined human and scene Gaussian data to a PT file"""
+    combined_gs = {
+        'xyz': torch.cat([human_gs_out['xyz'], scene_gs_out['xyz']], dim=0),
+        'scales': torch.cat([human_gs_out['scales'], scene_gs_out['scales']], dim=0),
+        'rotq': torch.cat([human_gs_out['rotq'], scene_gs_out['rotq']], dim=0),
+        'shs': torch.cat([human_gs_out['shs'], scene_gs_out['shs']], dim=0),
+        'opacity': torch.cat([human_gs_out['opacity'], scene_gs_out['opacity']], dim=0),
+        'active_sh_degree': human_gs_out['active_sh_degree'],  # Use human's active_sh_degree
+        # Additional metadata
+        'human_n_points': human_gs_out['xyz'].shape[0],
+        'scene_n_points': scene_gs_out['xyz'].shape[0],
+        'total_n_points': human_gs_out['xyz'].shape[0] + scene_gs_out['xyz'].shape[0],
+    }
+
+    # Ensure output directory exists
+    os.makedirs(os.path.dirname(output_path), exist_ok=True)
+
+    # Save the combined data
+    torch.save(combined_gs, output_path)
+
+    print(f"\nCombined PT file saved to: {output_path}")
+    print(f"Combined data statistics:")
+    print(f"  Total points: {combined_gs['total_n_points']}")
+    print(f"  Human points: {combined_gs['human_n_points']}")
+    print(f"  Scene points: {combined_gs['scene_n_points']}")
+    print(f"  Combined xyz shape: {combined_gs['xyz'].shape}")
+    print(f"  Combined scales shape: {combined_gs['scales'].shape}")
+    print(f"  Combined rotq shape: {combined_gs['rotq'].shape}")
+    print(f"  Combined shs shape: {combined_gs['shs'].shape}")
+    print(f"  Combined opacity shape: {combined_gs['opacity'].shape}")
+
+    return combined_gs
+
+
 def save_rendered_image(image_tensor, save_path, show_image=True):
 
     if len(image_tensor.shape) == 3:
@@ -340,15 +375,14 @@ if __name__ == "__main__":
                        help='Path to scene_gs_out.pt file')
     parser.add_argument('--out_png', type=str, default=None,
                        help='Output path for rendered image')
+    parser.add_argument('--out_combined_pt', type=str, default=None,
+                       help='Output path for combined PT file (only for human_scene mode)')
     parser.add_argument('--output_dir', type=str, default='./rendered_images',
                        help='Output directory for rendered images (used if --out_png not specified)')
     parser.add_argument('--show_images', action='store_true', default=False,
                        help='Show images using matplotlib (requires display)')
     parser.add_argument('--bg_color', type=float, nargs=3, default=[0.0, 0.0, 0.0],
                        help='Background color as RGB values (0-1 range)')
-    #parser.add_argument("--max_scene_points", type=int, default=400000,
-                   # help="Cap scene cloud; 0 = no cap")
-
 
     args = parser.parse_args()
 
@@ -357,9 +391,10 @@ if __name__ == "__main__":
     print(f"Human GS path: {args.human_pt}")
     print(f"Scene GS path: {args.scene_pt}")
     print(f"Output PNG: {args.out_png}")
+    print(f"Output combined PT: {args.out_combined_pt}")
 
     try:
-        # Load data based onarguments
+        # Load data based on arguments
         human_gs_out = None
         scene_gs_out = None
 
@@ -376,16 +411,6 @@ if __name__ == "__main__":
         elif args.render_mode in ['scene', 'human_scene']:
             print("Creating dummy scene GS data (no --scene_pt provided)...")
             scene_gs_out = create_dummy_scene_gs()
-       # MAX_SCENE_POINTS = getattr(args, "max_scene_points", 400_000)
-
-       # if scene_gs_out is not None and MAX_SCENE_POINTS:
-        #    n_pts = scene_gs_out["xyz"].shape[0]
-        #    if n_pts > MAX_SCENE_POINTS:
-        #        idx = torch.randperm(n_pts)[:MAX_SCENE_POINTS]
-        #        for key in ("xyz", "scales", "rotq", "shs", "opacity"):
-        #            scene_gs_out[key] = scene_gs_out[key][idx]
-        #        print(f"[info] scene cloud randomly pruned from {n_pts} to "
-        #              f"{MAX_SCENE_POINTS} points")
 
         shs = scene_gs_out["shs"]          # (N, 16, 3)
         dc = shs[:, 0]                 # (N, 3)
@@ -395,7 +420,6 @@ if __name__ == "__main__":
         print("  DC mean abs     :", dc.abs().mean().item())
         print("  Higher mean abs :", higher.abs().mean().item())
         print("  Higher max abs  :", higher.abs().max().item())
-
 
         if args.camera_json:
             print(f"Loading camera from JSON: {args.camera_json}")
@@ -441,6 +465,17 @@ if __name__ == "__main__":
             output_dir=args.output_dir,
             show_images=args.show_images,
         )
+
+        # Save combined PT file if in human_scene mode
+        if args.render_mode == 'human_scene' and human_gs_out is not None and scene_gs_out is not None:
+            if args.out_combined_pt is not None:
+                combined_pt_path = args.out_combined_pt
+            else:
+                # Generate default combined PT file name
+                combined_pt_path = os.path.join(args.output_dir, 'combined_human_scene.pt')
+
+            combined_gs = save_combined_pt(human_gs_out, scene_gs_out, combined_pt_path)
+
         # (1) Histogram of the rendered image
         img_lin = render_pkg["render"].detach().cpu()        # 3×H×W, linear
         print("render range  :", img_lin.min().item(), img_lin.max().item())
