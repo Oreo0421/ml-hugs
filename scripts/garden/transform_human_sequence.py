@@ -6,7 +6,7 @@ This aligns all frames with the scene using the transformation from the first al
 """
 run command
 
- python scripts/transform_human_sequence.py   --input_dir "/home/zhiyw/Desktop/ml-hugs/transformed_humans/hugs/ply"   --output_dir "/home/zhiyw/Desktop/ml-hugs/transformed_humans/mip_nerf_360"
+ python scripts/transform_human_sequence.py   --input_dir "transformed_humans/ply"   --output_dir
 
 """
 import torch
@@ -278,12 +278,12 @@ def main():
     ])
 
     # Define the transformation matrix from your aligned first frame
-    transform_matrix_scene = np.array([
-        [0.004506839905, -0.124592848122, 0.083404511213, -3.700955867767],
-        [0.149711236358, 0.008269036189, 0.004262818955, -2.735711812973],
-        [-0.008138610050, 0.083115860820, 0.124601446092, -4.244910240173],
-        [0.000000, 0.000000, 0.000000, 1.000000]
-    ])
+    transform_matrix_scene  np.array([
+                                    [-0.153790950775,  0.003212042619, -0.257561713457,  9.010006904602],
+                                    [-0.124777726829,  0.261501282454,  0.077766358852,  1.027978301048],
+                                    [ 0.225341692567,  0.146992415190, -0.132719114423,  0.294067323208],
+                                    [ 0.000000000000,  0.000000000000,  0.000000000000,  1.000000000000]
+                                    ])
     # Apply both transforms in sequence
     transform_matrix = transform_matrix_scene @ transform
 

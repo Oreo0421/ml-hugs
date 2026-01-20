@@ -246,8 +246,8 @@ if __name__ == "__main__":
     print("Starting camera extraction...")
 
     # Specify camera name and output path
-    camera_name = "xiangji"
-    output_dir = "C:/Users/26679/Desktop/blendr"
+    camera_name = "camera01"
+    output_dir = "/home/fzhi/fzt/3dgs_pipeline/ml_hug/ml-hugs/sparse/"
 
     # Check if the specific camera exists
     camera_obj = bpy.data.objects.get(camera_name)
