@@ -23,7 +23,7 @@ def main():
     camera_params = extractor.extract_and_save(output_path)
 
     print(f"Successfully extracted camera parameters for {args.seq} {args.split}")
-    print(f"Output saved to: {output_path}/djr.json")
+    print(f"Output saved to: {output_path}json")
 
 if __name__ == "__main__":
     main()
