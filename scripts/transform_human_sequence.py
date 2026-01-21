@@ -285,12 +285,7 @@ def main():
                                         [ 0.000000000000,  0.000000000000,  0.000000000000,  1.000000000000]
                                         ])
     # Apply both transforms in sequence
-    T = np.array([
-        [ 0.893447756767,  0.334673613310, -0.299574106932,  1.230534791946],
-        [-0.129829809070,  0.830905497074,  0.541054725647, -0.590863466263],
-        [ 0.429994523525, -0.444510519505,  0.785821318626,  0.707063674927],
-        [ 0.0,             0.0,             0.0,             1.0]])
-    transform_matrix = T @ transform_matrix_scene @ transform
+    transform_matrix = transform_matrix_scene @ transform
 
 
     # Create output directory

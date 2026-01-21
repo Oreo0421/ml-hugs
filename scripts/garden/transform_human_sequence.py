@@ -278,7 +278,7 @@ def main():
     ])
 
     # Define the transformation matrix from your aligned first frame
-    transform_matrix_scene  np.array([
+    transform_matrix_scene = np.array([
                                     [-0.153790950775,  0.003212042619, -0.257561713457,  9.010006904602],
                                     [-0.124777726829,  0.261501282454,  0.077766358852,  1.027978301048],
                                     [ 0.225341692567,  0.146992415190, -0.132719114423,  0.294067323208],
