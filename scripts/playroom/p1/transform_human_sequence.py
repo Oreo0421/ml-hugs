@@ -269,21 +269,12 @@ def main():
 
     args = parser.parse_args()
 
-     # First transform (the one you used earlier on the human position)
-    transform = np.array([
-        [1.417337, -3.719793,  5.757977, 20.600479],
-        [-0.786601, -5.929179, -3.636770,  2.822414],
-        [6.809730,  0.089329, -1.618520, 25.250027],
-        [0.000000,  0.000000,  0.000000,  1.000000]
-    ])
-
-    # Define the transformation matrix from your aligned first frame
-    transform_matrix_scene  = np.array([ [ 0.302041769028, 0.004976983648, 0.105574645102, -9.022824287415],
-                                        [ 0.028119388968, 0.304340690374, -0.094794824719,3.952184200287],
-                                        [-0.101882658899, 0.098752155900, 0.286823898554, -6.463224887848],
-                                        [ 0.0, 0.0, 0.0, 1.0] ])
-    # Apply both transforms in sequence
-    transform_matrix = transform_matrix_scene @ transform
+    T_TOTAL = np.array([
+        [ 0.95676806, -1.12771127,  1.68239787,  0.5641625 ],
+        [ 0.00870305, -1.85836058, -1.25060843,  2.2911702 ],
+        [ 2.02536921,  0.54070739, -0.78937747, -2.34121266],
+        [ 0.0,         0.0,         0.0,         1.0]], dtype=np.float64)
+    transform_matrix = T_TOTAL
 
 
     # Create output directory
