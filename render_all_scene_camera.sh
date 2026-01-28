@@ -2,8 +2,8 @@
 
 CAMERA_ROOT="/home/fzhi/fzt/3dgs_pipeline/ml_hug/ml-hugs/camera"
 SCENE_ROOT="/home/fzhi/fzt/3dgs_pipeline/animatable_dataset/scenefixed"
-HUMAN_ROOT="/mnt/data_hdd/fzhi/mid/101010"
-OUT_ROOT="/mnt/data_hdd/fzhi/output/101010"
+HUMAN_ROOT="/mnt/data_hdd/fzhi/mid/101010/pose01"
+OUT_ROOT="/mnt/data_hdd/fzhi/output/101010/pose01"
 
 START=00000000
 END=00000001

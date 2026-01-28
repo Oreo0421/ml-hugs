@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-SCENE_PT="/home/fzhi/fzt/3dgs_pipeline/animatable_dataset/scenefixed/djr/djr.pt"
-CAMERA_ROOT="/home/fzhi/fzt/3dgs_pipeline/ml_hug/ml-hugs/camera/djr"
-HUMAN_ROOT="/mnt/data_hdd/fzhi/mid/101010/pose01/djr"
-OUT_ROOT="/mnt/data_hdd/fzhi/output/101010/pose01/djr"
+SCENE_PT="/home/fzhi/fzt/3dgs_pipeline/animatable_dataset/scenefixed/room/room.pt"
+CAMERA_ROOT="/home/fzhi/fzt/3dgs_pipeline/ml_hug/ml-hugs/camera/room"
+HUMAN_ROOT="/mnt/data_hdd/fzhi/mid/101010/pose01/room"
+OUT_ROOT="/mnt/data_hdd/fzhi/output/101010/pose01/room"
 
 START=00000000
 END=00000001
